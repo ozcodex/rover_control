@@ -1,12 +1,17 @@
 import requests
 import pygame
 
-def call_action():
+def call_action(action='stop'):
         try:
-            response = requests.get('http://192.168.20.38/action=forward', timeout=1)
+            response = requests.get('http://192.168.20.38/action='+action, timeout=1)
             print("Success!")
         except:
             print("Error!")
+
+
+def close():
+    call_action('stop')
+    quit()
 
 pygame.init()
 pygame.display.set_caption('Rover Control')
@@ -26,21 +31,26 @@ while True:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            quit()
+            close()
         elif event.type == pygame.KEYDOWN:
             rect.x = 344
             rect.y = 224
             if event.key == pygame.K_UP:
                 rect.y -= 16
+                call_action('forward')
             elif event.key == pygame.K_DOWN:
                 rect.y += 16
+                call_action('backward')
             elif event.key == pygame.K_LEFT:
                 rect.x -= 16
+                call_action('left')
             elif event.key == pygame.K_RIGHT:
                 rect.x += 16
+                call_action('right')
             elif event.key == pygame.K_ESCAPE:
-                quit()
+                close()
         elif event.type == pygame.KEYUP:
+            call_action('stop')
             rect.x = 344
             rect.y = 224
 
