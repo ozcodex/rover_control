@@ -1,21 +1,26 @@
 import requests
 import pygame
 import threading
+import sys
 
 def call_action(action='stop'):
         try:
-            response = requests.get('http://192.168.20.38/action='+action, timeout=2)
-            print("Success!")
+            response = requests.get('http://192.168.20.38/action='+action, timeout=1)
+            print("Succeded")
+            print(response.elapsed.total_seconds() * 1000)
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
+            print("Timed out!")
         except:
-            print("Error!")
+            print("Error!", sys.exc_info()[0])
+
+def ping_connection():
+    print("")
 
 def close():
     call_action('stop')
     quit()
 
 ######### MAIN ########
-
-
 
 pygame.init()
 pygame.display.set_caption('Rover Control')
@@ -45,18 +50,19 @@ while True:
                 threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('forward',)).start()
             elif event.key == pygame.K_DOWN:
                 rect.y += 16               
-                threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('forward',)).start()
+                threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('backward',)).start()
             elif event.key == pygame.K_LEFT:
                 rect.x -= 16
-                threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('forward',)).start()
+                threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('left',)).start()
             elif event.key == pygame.K_RIGHT:
                 rect.x += 16
-                threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('forward',)).start()
+                threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('right',)).start()
             elif event.key == pygame.K_ESCAPE:
                 close()
         elif event.type == pygame.KEYUP:
             rect.x = 344
             rect.y = 224
+            threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('stop',)).start()
 
     screen.fill(BLACK)
     screen.blit(image, rect)
