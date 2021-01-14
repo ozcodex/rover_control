@@ -46,16 +46,16 @@ while True:
             rect.x = 344
             rect.y = 224
             if event.key == pygame.K_UP:
-                rect.y -= 16
+                rect.y -= 32
                 threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('forward',)).start()
             elif event.key == pygame.K_DOWN:
-                rect.y += 16               
+                rect.y += 32               
                 threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('backward',)).start()
             elif event.key == pygame.K_LEFT:
-                rect.x -= 16
+                rect.x -= 32
                 threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('left',)).start()
             elif event.key == pygame.K_RIGHT:
-                rect.x += 16
+                rect.x += 32
                 threading.Thread(name='action_daemon', target=call_action, daemon=True, args=('right',)).start()
             elif event.key == pygame.K_ESCAPE:
                 close()
