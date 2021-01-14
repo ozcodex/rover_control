@@ -83,7 +83,7 @@ screen = pygame.display.set_mode((720, 480))
 clock = pygame.time.Clock()
 
 ######## GUI ##############
-manager = pygame_gui.UIManager((800, 600))
+manager = pygame_gui.UIManager((720, 480))
 
 rect = pygame.Rect((444, 224), (32, 32))
 image = pygame.Surface((32, 32))
@@ -100,6 +100,10 @@ address_box.set_text(ip_address)
 address_box.set_text_length_limit(15)
 
 log_box = create_log_box(manager)
+
+timeout_selector = pygame_gui.elements.ui_drop_down_menu.UIDropDownMenu(
+        options_list=['0.5','0.7','0.9','1','1.2','1.5','2'],starting_option='1',
+        relative_rect=pygame.Rect((320, 25), (100, 30)), manager=manager)
 
 ####### RUNNING CYCLE #######
 
@@ -147,6 +151,9 @@ while True:
              if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                  if event.ui_element == hello_button:
                     connect(address_box.get_text()) 
+             if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+                 if event.ui_element == timeout_selector:
+                    timeout = float(event.text)
         manager.process_events(event)
     
     ## Re create log box
